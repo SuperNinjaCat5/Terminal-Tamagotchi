@@ -2,80 +2,112 @@ import pet_control
 import os
 import time
 
+def stat_bar(value):
+    return "█" * value + "-" * (10 - value)
+
 def clear_console():
     os.system('cls' if os.name == 'nt' else 'clear')
 
 def main():
     while True:
-        clear_console()
-        print("Welcome to Terminal Tamagotchi\n----------------------")
-        input("Click enter to continue...")
-        clear_console()
+        while True:
+            clear_console()
+            print("🌟 Welcome to Terminal Tamagotchi! 🌟")
+            print("------------------------------------")
+            input("Press Enter to begin...")
+            clear_console()
 
-        name_input = input("Name your new pet:\n")
-        clear_console()
+            print("🐾 Let's adopt a pet!")
+            name_input = input("📝 What will you name your new companion?\n\n> ")
+            clear_console()
 
-        print("Pick a pet type!\n1. Cat\n2. Dog\n3. Turtle")
-        pet_type_input = input("----------------------\nEnter the type: ")
-        clear_console()
+            print("🐾 Choose your pet type:\n")
+            print("  [1] 🐱 Cat")
+            print("  [2] 🐶 Dog")
+            print("  [3] 🐢 Turtle\n")
 
-        if pet_type_input == "1":
-            pet_type = "Cat"
-            break
-        elif pet_type_input == "2":
-            pet_type = "Dog"
-            break
-        elif pet_type_input == "3":
-            pet_type = "Turtle"
-            break
-        else:
-            print("Incorrect Pet type! Please give a number.")
-            continue
+            pet_type_input = input("🔢 Enter the number of your choice:\n\n> ")
+            clear_console()
 
-    player_pet = pet_control.Pet(name_input, pet_type)
+            if pet_type_input == "1":
+                pet_type = "Cat"
+                break
+            elif pet_type_input == "2":
+                pet_type = "Dog"
+                break
+            elif pet_type_input == "3":
+                pet_type = "Turtle"
+                break
+            else:
+                print("❗ Invalid choice! Please enter 1, 2, or 3.")
+                time.sleep(1.5)
+                continue
 
-    while True:
-        status = player_pet.status()
+        player_pet = pet_control.Pet(name_input, pet_type)
 
-        print(f"Your {player_pet.pet_type}, {player_pet.name}:")
-        print(f"Hunger: {status[0]}")
-        print(f"Energy: {status[1]}")
-        print(f"Happiness: {status[2]}")
-        print(f"Age: {status[3]}")
+        while True:
+            status = player_pet.status()
 
-        print("\n----------------------\n")
+            emoji = "🐱" if player_pet.pet_type == "Cat" else "🐶" if player_pet.pet_type == "Dog" else "🐢"
+            print(f"{emoji} Your {player_pet.pet_type}, {player_pet.name}:\n")
+            print(f"🍽️  Hunger:    {stat_bar(status[0])} ({status[0]})\n")
+            print(f"💤  Energy:    {stat_bar(status[1])} ({status[1]})\n")
+            print(f"🎉  Happiness: {stat_bar(status[2])} ({status[2]})\n")
 
-        action = input("Pick an action\n1. Feed\n2. Rest\n3. Play\n4.Quit\n\n")
+            print("────────────────────────────────────")
 
-        before = player_pet.status()
+            print("📋 What would you like to do?\n")
+            print("  [1] 🍽️  Feed")
+            print("  [2] 💤  Rest")
+            print("  [3] 🎾  Play")
+            print("  [4] ❌  Quit")
+            print("────────────────────────────────────")
 
-        if action == "1":
-            player_pet.feed()
-        elif action == "2":
-            player_pet.rest()
-        elif action == "3":
-            player_pet.play()
-        elif action == "4":
-            return
+            action = input("🔢 Enter the number of your choice:\n\n> ")
 
-        player_pet.hunger = max(0, min(player_pet.hunger, 10))
-        player_pet.energy = max(0, min(player_pet.energy, 10))
-        player_pet.happiness = max(0, min(player_pet.happiness, 10))
+            before = player_pet.status()
 
-        after = player_pet.status()
+            if action == "1":
+                player_pet.feed()
+            elif action == "2":
+                player_pet.rest()
+            elif action == "3":
+                player_pet.play()
+            elif action == "4":
+                return
 
-        if action == "1":
-            print(f"\nPet Fed! (Hunger {before[0]} → {after[0]})")
-        elif action == "2":
-            print(f"\nPet Rested! (Energy {before[1]} → {after[1]}, Hunger {before[0]} → {after[0]})")
-        elif action == "3":
-            print(f"\nPet Played! (Happiness {before[2]} → {after[2]}, Energy {before[1]} → {after[1]}, Hunger {before[0]} → {after[0]})")
+            player_pet.hunger = max(0, min(player_pet.hunger, 10))
+            player_pet.energy = max(0, min(player_pet.energy, 10))
+            player_pet.happiness = max(0, min(player_pet.happiness, 10))
 
-        time.sleep(4)
+            after = player_pet.status()
 
-        player_pet.tick()
+            if action == "1":
+                print(f"\n✅ Pet Fed! (Hunger {before[0]} → {after[0]})")
+            elif action == "2":
+                print(f"\n✅ Pet Rested! (Energy {before[1]} → {after[1]}, Hunger {before[0]} → {after[0]})")
+            elif action == "3":
+                print(f"\n✅ Pet Played! (Happiness {before[2]} → {after[2]}, Energy {before[1]} → {after[1]}, Hunger {before[0]} → {after[0]})")
 
-        clear_console()
+            time.sleep(3)
+
+            player_pet.tick()
+
+            if player_pet.hunger >= 10 or player_pet.energy <= 0:
+                player_pet.alive = False
+                clear_console()
+                print("💀 What! You monster. You really let your digital pet die. Scum of the earth.")
+                input("\nPress Enter to continue...")
+                break
+
+            if player_pet.happiness <= 0:
+                player_pet.alive = False
+                clear_console()
+                print("🏃‍♂️ What! You animal abuser. Your pet was so unhappy it ran away!")
+                input("\nPress Enter to continue...")
+                break
+
+            clear_console()
 
 if __name__ == "__main__":
     main()

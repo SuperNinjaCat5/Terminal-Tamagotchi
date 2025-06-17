@@ -23,10 +23,11 @@ class Pet():
     def play(self):
         self.happiness += 4
         self.energy -= 2
-        self.hunger -= 2
+        self.hunger += 1
 
     def tick(self):
         self.happiness -= 1
+        self.hunger += 1
 
     def status(self):
         stats = [self.hunger, self.energy, self.happiness, self.age, self.alive]
