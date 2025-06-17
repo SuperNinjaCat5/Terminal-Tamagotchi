@@ -21,12 +21,11 @@
 
 1. Make sure you have Python installed (`>=3.6`).
 2. Clone or download this repo.
-3. Run the game:
+3. Run the game with:
+```bash
+python main.py
 
 **or**
 
 1. Open dist
 2. Download and run the .exe **(may or may not work!)**
-
-```bash
-python main.py
