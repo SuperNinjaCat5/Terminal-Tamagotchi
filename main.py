@@ -144,7 +144,6 @@ def main():
             elif action == "3":
                 print(f"\n✅ Pet Played! (Happiness {before[2]} → {after[2]}, Energy {before[1]} → {after[1]}, Hunger {before[0]} → {after[0]})")
 
-            time.sleep(0.5)
 
             player_pet.tick()
 
@@ -190,7 +189,7 @@ def main():
 
                 if random_action in [1, 2, 3, 4]:
                     pass
-                if random_action in [5, 6]:
+                if random_action == 5 or 6:
 
                     before = player_pet.status()
 
@@ -201,11 +200,52 @@ def main():
 
                     after = player_pet.status()
 
-                    print(f"\n✅ Pet Rested! (Energy {before[1]} → {after[1]}, Hunger {before[0]} → {after[0]})")
-
-
+                    print(f"✅ Your pet enjoyed it! (Energy {before[1]} → {after[1]}, Hunger {before[0]} → {after[0]})")
+                    
+                    if player_pet.happiness == 0:
+                        player_pet.happiness += 1
+                    
+                    clear_console()
+                
                 if random_action == 7:
+
+                    before = player_pet.status()
+
+                    print(f"{player_pet.name} has clinical depression!")
+
+                    player_pet.happiness -= 1
+
+                    player_pet.happiness = max(0, min(player_pet.happiness, 10))
+
+                    after = player_pet.status()
+
+                    print(f"✅ Your pet's sad. (Energy {before[1]} → {after[1]}, Hunger {before[0]} → {after[0]})")
+                    
+                    if player_pet.happiness == 0:
+                        player_pet.happiness += 1
+
+                    clear_console()
+
+
+                if random_action == 8:
+                    before = player_pet.status()
+
                     print(f"{player_pet.name} had a hard time sleeping!")
+
+                    player_pet.energy -= 1
+
+                    player_pet.energy = max(0, min(player_pet.happiness, 10))
+
+                    after = player_pet.status()
+
+                    print(f"✅ Your pet's tired. (Energy {before[1]} → {after[1]}, Hunger {before[0]} → {after[0]})")
+                    
+                    clear_console()
+
+                    if player_pet.energy == 0:
+                        player_pet.energy += 1
+
+                time.sleep(0.5)
 
             
 
