@@ -23,19 +23,63 @@ def main():
             action = input("🔢 Enter the number of your choice:\n\n> ")
 
             if action == '1':
-                pass
+                clear_console()
+
+                print("🐾 Let's adopt a pet!")
+                name_input = input("📝 What will you name your new companion?\n\n> ")
+                clear_console()
+
+                print("🐾 Choose your pet type:\n")
+                print("  [1] 🐱 Cat")
+                print("  [2] 🐶 Dog")
+                print("  [3] 🐢 Turtle\n")
+
+                pet_type_input = input("🔢 Enter the number of your choice:\n\n> ")
+                clear_console()
+
+                if pet_type_input == "1":
+                    pet_type = "Cat"
+                    player_pet = pet_control.Pet(name_input, pet_type)
+                    break
+                elif pet_type_input == "2":
+                    pet_type = "Dog"
+                    player_pet = pet_control.Pet(name_input, pet_type)
+                    break
+                elif pet_type_input == "3":
+                    pet_type = "Turtle"
+                    player_pet = pet_control.Pet(name_input, pet_type)
+                    break
+                else:
+                    print("❗ Invalid choice! Please enter 1, 2, or 3.")
+                    time.sleep(1.5)
+                    continue
+
             elif action == '2':
                 clear_console()
 
                 input_name = input("🐾 Enter the name of your pet:\n\n> ")
+                clear_console()
                 input_type = input("🐶 Enter your pet's type (e.g., Cat, Dog):\n\n> ")
+                clear_console()
 
-                player_pet = json_control.load_json(input_type, input_name)
+                pet_data = json_control.load_json(input_type, input_name)
+                if pet_data is None:
+                    input("\n🔙 Press Enter to return to the menu...")
+                    continue
+                player_pet = pet_control.Pet.from_dict(pet_data)
+                if player_pet.alive == False:
+                    print("It's dead stupid.")
 
-                break
+                    file_path = f"{input_type}-{input_name}.json"
+                
+                    if os.path.exists(file_path):
+                        os.remove(file_path)
+                    
+                    continue
 
             elif action == '3':
                 input_name = input("🐾 Enter the name of the pet:\n\n> ")
+                clear_console()
                 input_type = input("🐶 Enter the pet's type (e.g., Cat, Dog):\n\n> ")
 
                 input_name = input_name.upper()
@@ -48,35 +92,7 @@ def main():
 
                 continue
 
-            clear_console()
-
-            print("🐾 Let's adopt a pet!")
-            name_input = input("📝 What will you name your new companion?\n\n> ")
-            clear_console()
-
-            print("🐾 Choose your pet type:\n")
-            print("  [1] 🐱 Cat")
-            print("  [2] 🐶 Dog")
-            print("  [3] 🐢 Turtle\n")
-
-            pet_type_input = input("🔢 Enter the number of your choice:\n\n> ")
-            clear_console()
-
-            if pet_type_input == "1":
-                pet_type = "Cat"
-                break
-            elif pet_type_input == "2":
-                pet_type = "Dog"
-                break
-            elif pet_type_input == "3":
-                pet_type = "Turtle"
-                break
-            else:
-                print("❗ Invalid choice! Please enter 1, 2, or 3.")
-                time.sleep(1.5)
-                continue
-
-        player_pet = pet_control.Pet(name_input, pet_type)
+           
 
         while True:
             status = player_pet.status()
@@ -123,7 +139,7 @@ def main():
             elif action == "3":
                 print(f"\n✅ Pet Played! (Happiness {before[2]} → {after[2]}, Energy {before[1]} → {after[1]}, Hunger {before[0]} → {after[0]})")
 
-            time.sleep(3)
+            time.sleep(0.5)
 
             player_pet.tick()
 
