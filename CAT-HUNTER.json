@@ -1,0 +1,10 @@
+{
+    "hunger": 1,
+    "energy": 10,
+    "happiness": 7,
+    "alive": true,
+    "age": 1,
+    "date_create": "17-06-2025",
+    "name": "Hunter",
+    "pet_type": "Cat"
+}

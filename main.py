@@ -1,6 +1,7 @@
 import pet_control
 import os
 import time
+import json_control as json_control
 
 def stat_bar(value):
     return "█" * value + "-" * (10 - value)
@@ -14,7 +15,39 @@ def main():
             clear_console()
             print("🌟 Welcome to Terminal Tamagotchi! 🌟")
             print("------------------------------------")
-            input("Press Enter to begin...")
+            print("📁 What would you like to do?\n")
+            print("  [1] 🐣 New Pet")
+            print("  [2] 💾 Load Pet")
+            print("  [3] 🗑️ Delete Pet\n")
+
+            action = input("🔢 Enter the number of your choice:\n\n> ")
+
+            if action == '1':
+                pass
+            elif action == '2':
+                clear_console()
+
+                input_name = input("🐾 Enter the name of your pet:\n\n> ")
+                input_type = input("🐶 Enter your pet's type (e.g., Cat, Dog):\n\n> ")
+
+                player_pet = json_control.load_json(input_type, input_name)
+
+                break
+
+            elif action == '3':
+                input_name = input("🐾 Enter the name of the pet:\n\n> ")
+                input_type = input("🐶 Enter the pet's type (e.g., Cat, Dog):\n\n> ")
+
+                input_name = input_name.upper()
+                input_type = input_type.upper()
+
+                file_path = f"{input_type}-{input_name}.json"
+                
+                if os.path.exists(file_path):
+                    os.remove(file_path)
+
+                continue
+
             clear_console()
 
             print("🐾 Let's adopt a pet!")
@@ -74,6 +107,7 @@ def main():
             elif action == "3":
                 player_pet.play()
             elif action == "4":
+                json_control.upload_to_json(player_pet, player_pet.name, player_pet.pet_type)
                 return
 
             player_pet.hunger = max(0, min(player_pet.hunger, 10))

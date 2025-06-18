@@ -37,3 +37,26 @@ class Pet():
         self.hunger = max(0, min(stats[0], 10))
         self.energy = max(0, min(stats[1], 10))
         self.happiness = max(0, min(stats[2], 10))
+
+    def to_dict(self):
+        return {
+            'hunger': self.hunger,
+            'energy': self.energy,
+            'happiness': self.happiness,
+            'alive': self.alive,
+            'age': self.age,
+            'date_create': self.date_create,
+            'name': self.name,
+            'pet_type': self.pet_type
+        }
+
+    @classmethod
+    def from_dict(cls, data):
+        pet = cls(data['name'], data['pet_type'])
+        pet.hunger = data.get('hunger', 0)
+        pet.energy = data.get('energy', 10)
+        pet.happiness = data.get('happiness', 10)
+        pet.alive = data.get('alive', True)
+        pet.age = data.get('age', 1)
+        pet.date_create = data.get('date_create', '')
+        return pet
