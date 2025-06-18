@@ -4,7 +4,7 @@ class Pet():
         now = datetime.now()
         date = now.strftime("%d-%m-%Y")
 
-        self.hunger = 0
+        self.hunger = 10
         self.energy = 10
         self.happiness = 10
         self.alive = True
@@ -14,21 +14,22 @@ class Pet():
         self.pet_type = pet_type
 
     def feed(self):
-        self.hunger -= 4
+        self.hunger += 4
 
     def rest(self):
         self.energy += 2
-        self.hunger += 1
+        self.hunger -= 1
 
     def play(self):
         self.happiness += 4
         self.energy -= 2
-        self.hunger += 1
+        self.hunger -= 1
 
     def tick(self):
         self.happiness -= 1
-        self.hunger += 1
         self.age += 1
+        if self.hunger < 10:
+            self.hunger -= 1
 
     def status(self):
         stats = [self.hunger, self.energy, self.happiness, self.age, self.alive]

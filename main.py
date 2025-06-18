@@ -3,6 +3,7 @@ import os
 import time
 import json_control as json_control
 
+
 def stat_bar(value):
     return "█" * value + "-" * (10 - value)
 
@@ -18,7 +19,9 @@ def main():
             print("📁 What would you like to do?\n")
             print("  [1] 🐣 New Pet")
             print("  [2] 💾 Load Pet")
-            print("  [3] 🗑️ Delete Pet\n")
+            print("  [3] 🗑️ Delete Pet")
+            print("  [4] 📂 View Pets")
+            print("  [5] ❌  Quit\n")
 
             action = input("🔢 Enter the number of your choice:\n\n> ")
 
@@ -37,20 +40,20 @@ def main():
                 pet_type_input = input("🔢 Enter the number of your choice:\n\n> ")
                 clear_console()
 
-                if pet_type_input == "1":
+                if pet_type_input == "1" or pet_type_input.lower() == "cat":
                     pet_type = "Cat"
                     player_pet = pet_control.Pet(name_input, pet_type)
                     break
-                elif pet_type_input == "2":
+                elif pet_type_input == "2" or pet_type_input.lower() == "dog":
                     pet_type = "Dog"
                     player_pet = pet_control.Pet(name_input, pet_type)
                     break
-                elif pet_type_input == "3":
+                elif pet_type_input == "3" or pet_type_input.lower() == "turtle":
                     pet_type = "Turtle"
                     player_pet = pet_control.Pet(name_input, pet_type)
                     break
                 else:
-                    print("❗ Invalid choice! Please enter 1, 2, or 3.")
+                    print("❗ Invalid choice! Please enter 1, 2, or 3. (or the animal name eg. Cat, Dog...)")
                     time.sleep(1.5)
                     continue
 
@@ -83,6 +86,7 @@ def main():
                 break
 
             elif action == '3':
+                clear_console()
                 input_name = input("🐾 Enter the name of the pet:\n\n> ")
                 clear_console()
                 input_type = input("🐶 Enter the pet's type (e.g., Cat, Dog):\n\n> ")
@@ -96,8 +100,25 @@ def main():
                     os.remove(file_path)
 
                 continue
+            
+            elif action == '4':
+                saves = json_control.glob()
 
-           
+                if not saves:
+                    clear_console()
+                    print("No pets saved.")
+                    input("🔙 Press Enter to go back...")
+                    continue
+
+                clear_console()
+                for save in saves:
+                    print("📁 " + save.replace(".json", ""))
+                
+                input("🔙 Press Enter to go back...")
+                continue
+
+            elif action == '5':
+                return
 
         while True:
             status = player_pet.status()
@@ -129,7 +150,7 @@ def main():
                 player_pet.play()
             elif action == "4":
                 json_control.upload_to_json(player_pet, player_pet.name, player_pet.pet_type)
-                return
+                break
 
             player_pet.hunger = max(0, min(player_pet.hunger, 10))
             player_pet.energy = max(0, min(player_pet.energy, 10))
@@ -144,8 +165,12 @@ def main():
             elif action == "3":
                 print(f"\n✅ Pet Played! (Happiness {before[2]} → {after[2]}, Energy {before[1]} → {after[1]}, Hunger {before[0]} → {after[0]})")
 
+            time.sleep(2.5)
 
             player_pet.tick()
+            
+            if action == "1" and player_pet.hunger == 9:
+                player_pet.hunger += 1
 
             if player_pet.hunger >= 10 or player_pet.energy <= 0:
                 player_pet.alive = False
@@ -165,7 +190,7 @@ def main():
 
             if player_pet.age >= 20:
                 death_chance = random.randrange(0, 6)
-                if death_chance == 5 or 6:
+                if death_chance in [5,6]:
                     clear_console()
                     print(f"💀 Your {player_pet.pet_type}, {player_pet.name} died of old age!")
                     input("\nPress Enter to continue...")
@@ -180,20 +205,19 @@ def main():
                 else:
                     pass
                     
-
             clear_console()
 
             if player_pet.age >= 4:
                 import random
                 random_action = random.randrange(0, 10)
 
-                if random_action in [1, 2, 3, 4]:
+                if random_action in [1, 2, 3, 4, 9, 10]:
                     pass
                 if random_action == 5 or 6:
 
                     before = player_pet.status()
 
-                    print(f"{player_pet.name} found a toy!")
+                    print(f"🎁 {player_pet.name} found a toy!")
                     player_pet.happiness += 2
 
                     player_pet.happiness = max(0, min(player_pet.happiness, 10))
@@ -201,9 +225,8 @@ def main():
                     after = player_pet.status()
 
                     print(f"✅ Your pet enjoyed it! (Energy {before[1]} → {after[1]}, Hunger {before[0]} → {after[0]})")
-                    
-                    if player_pet.happiness == 0:
-                        player_pet.happiness += 1
+
+                    input("\n🔙 Press Enter to go back...")
                     
                     clear_console()
                 
@@ -221,11 +244,12 @@ def main():
 
                     print(f"✅ Your pet's sad. (Energy {before[1]} → {after[1]}, Hunger {before[0]} → {after[0]})")
                     
+                    input("\n🔙 Press Enter to go back...")
+
                     if player_pet.happiness == 0:
                         player_pet.happiness += 1
 
                     clear_console()
-
 
                 if random_action == 8:
                     before = player_pet.status()
@@ -240,12 +264,15 @@ def main():
 
                     print(f"✅ Your pet's tired. (Energy {before[1]} → {after[1]}, Hunger {before[0]} → {after[0]})")
                     
+                    input("\n🔙 Press Enter to go back...")
+
                     clear_console()
 
                     if player_pet.energy == 0:
                         player_pet.energy += 1
 
-                time.sleep(0.5)
+
+                time.sleep(1)
 
             
 
