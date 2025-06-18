@@ -28,6 +28,7 @@ class Pet():
     def tick(self):
         self.happiness -= 1
         self.hunger += 1
+        self.age += 1
 
     def status(self):
         stats = [self.hunger, self.energy, self.happiness, self.age, self.alive]

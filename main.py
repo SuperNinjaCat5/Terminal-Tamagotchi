@@ -63,12 +63,16 @@ def main():
                 clear_console()
 
                 pet_data = json_control.load_json(input_type, input_name)
+
                 if pet_data is None:
                     input("\n🔙 Press Enter to return to the menu...")
                     continue
+
                 player_pet = pet_control.Pet.from_dict(pet_data)
+
                 if player_pet.alive == False:
                     print("It's dead stupid.")
+                    input("\n🔙 Press Enter to return to the menu...")
 
                     file_path = f"{input_type}-{input_name}.json"
                 
@@ -76,6 +80,7 @@ def main():
                         os.remove(file_path)
                     
                     continue
+                break
 
             elif action == '3':
                 input_name = input("🐾 Enter the name of the pet:\n\n> ")
@@ -148,6 +153,7 @@ def main():
                 clear_console()
                 print("💀 What! You monster. You really let your digital pet die. Scum of the earth.")
                 input("\nPress Enter to continue...")
+                json_control.upload_to_json(player_pet, player_pet.name, player_pet.pet_type)
                 break
 
             if player_pet.happiness <= 0:
@@ -155,9 +161,53 @@ def main():
                 clear_console()
                 print("🏃‍♂️ What! You animal abuser. Your pet was so unhappy it ran away!")
                 input("\nPress Enter to continue...")
+                json_control.upload_to_json(player_pet, player_pet.name, player_pet.pet_type)
                 break
 
+            if player_pet.age >= 20:
+                death_chance = random.randrange(0, 6)
+                if death_chance == 5 or 6:
+                    clear_console()
+                    print(f"💀 Your {player_pet.pet_type}, {player_pet.name} died of old age!")
+                    input("\nPress Enter to continue...")
+                    json_control.upload_to_json(player_pet, player_pet.name, player_pet.pet_type)
+                    break
+
+                if death_chance == 5 or 6:
+                    player_pet.alive = False
+                    clear_console()
+                    print(f"💀 No! Your {player_pet.pet_type}, {player_pet.name} just")
+                    input("\nPress Enter to continue...")
+                else:
+                    pass
+                    
+
             clear_console()
+
+            if player_pet.age >= 4:
+                import random
+                random_action = random.randrange(0, 10)
+
+                if random_action in [1, 2, 3, 4]:
+                    pass
+                if random_action in [5, 6]:
+
+                    before = player_pet.status()
+
+                    print(f"{player_pet.name} found a toy!")
+                    player_pet.happiness += 2
+
+                    player_pet.happiness = max(0, min(player_pet.happiness, 10))
+
+                    after = player_pet.status()
+
+                    print(f"\n✅ Pet Rested! (Energy {before[1]} → {after[1]}, Hunger {before[0]} → {after[0]})")
+
+
+                if random_action == 7:
+                    print(f"{player_pet.name} had a hard time sleeping!")
+
+            
 
 if __name__ == "__main__":
     main()
