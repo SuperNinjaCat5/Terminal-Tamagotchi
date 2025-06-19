@@ -3,6 +3,26 @@ import os
 import time
 import json_control as json_control
 
+try:
+    from playsound import playsound
+except ImportError:
+    import subprocess
+    import sys
+
+    print("📦 Installing 'playsound' module...")
+
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "playsound==1.2.2"])
+
+try:
+    from playsound import playsound
+except ImportError:
+    print("❌ 'playsound' failed to install. Please install manually: pip install playsound")
+    exit(1)
+
+import threading
+
+def play_sound_async(file):
+    threading.Thread(target=playsound, args=(file,), daemon=True).start()
 
 def stat_bar(value):
     return "█" * value + "-" * (10 - value)
@@ -168,11 +188,11 @@ def main():
             time.sleep(2.5)
 
             player_pet.tick()
-            
+
             if action == "1" and player_pet.hunger == 9:
                 player_pet.hunger += 1
 
-            if player_pet.hunger >= 10 or player_pet.energy <= 0:
+            if player_pet.hunger <= 0 or player_pet.energy <= 0:
                 player_pet.alive = False
                 clear_console()
                 print("💀 What! You monster. You really let your digital pet die. Scum of the earth.")
@@ -207,13 +227,13 @@ def main():
                     
             clear_console()
 
-            if player_pet.age >= 4:
+            if player_pet.age >= 6 :
                 import random
-                random_action = random.randrange(0, 10)
+                random_action = random.randint(0, 10)
 
                 if random_action in [1, 2, 3, 4, 9, 10]:
                     pass
-                if random_action == 5 or 6:
+                elif random_action in [5, 6]:
 
                     before = player_pet.status()
 
@@ -224,13 +244,13 @@ def main():
 
                     after = player_pet.status()
 
-                    print(f"✅ Your pet enjoyed it! (Energy {before[1]} → {after[1]}, Hunger {before[0]} → {after[0]})")
+                    print(f"✅ Your pet enjoyed it! (Energy {before[1]} → {after[1]}")
 
                     input("\n🔙 Press Enter to go back...")
                     
                     clear_console()
                 
-                if random_action == 7:
+                elif random_action == 7:
 
                     before = player_pet.status()
 
@@ -242,7 +262,7 @@ def main():
 
                     after = player_pet.status()
 
-                    print(f"✅ Your pet's sad. (Energy {before[1]} → {after[1]}, Hunger {before[0]} → {after[0]})")
+                    print(f"✅ Your pet's sad. (Energy {before[1]} → {after[1]}")
                     
                     input("\n🔙 Press Enter to go back...")
 
@@ -251,18 +271,18 @@ def main():
 
                     clear_console()
 
-                if random_action == 8:
+                elif random_action == 8:
                     before = player_pet.status()
 
                     print(f"{player_pet.name} had a hard time sleeping!")
 
                     player_pet.energy -= 1
 
-                    player_pet.energy = max(0, min(player_pet.happiness, 10))
+                    player_pet.energy = max(0, min(player_pet.energy, 10))
 
                     after = player_pet.status()
 
-                    print(f"✅ Your pet's tired. (Energy {before[1]} → {after[1]}, Hunger {before[0]} → {after[0]})")
+                    print(f"✅ Your pet's tired. (Energy {before[1]} → {after[1]})")
                     
                     input("\n🔙 Press Enter to go back...")
 
