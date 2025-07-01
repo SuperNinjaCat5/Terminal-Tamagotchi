@@ -27,5 +27,5 @@ python main.py
 
 **or**
 
-1. Open dist
-2. Download and run the .exe **(may or may not work!)**
+1. Go to releases
+2. Download and run the most recent version. No python required!
